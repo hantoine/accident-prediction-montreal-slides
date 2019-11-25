@@ -1,0 +1,511 @@
+\documentclass[slidestop,compress,red,mathserif]{beamer}
+
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath,amssymb}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{marvosym}
+\usepackage{natbib}
+\usepackage{ulem}
+\usepackage{wasysym}
+\AtBeginDocument{%
+  \hypersetup{
+    citecolor=Violet,
+    linkcolor=Red,   
+    urlcolor=Magenta}}
+
+\definecolor{maroon}{rgb}{0.5, 0.0, 0.0}
+\definecolor{sangria}{rgb}{0.57, 0.0, 0.04}
+\newcommand{\colorcite}[1]{\colorlet{saved}{.}\color{sangria}\cite{#1}\color{saved}}
+
+\setbeamersize{text margin left=6mm, text margin right=2mm}
+
+\mode<presentation>
+{
+%\usetheme{Warsaw}
+%\usetheme{Rochester}
+%\usetheme{Madrid}
+%\usetheme{Pittsburgh}
+%\usetheme{Antibes}
+%\usetheme{Montpellier}
+%\usetheme{Berkeley}
+%\usetheme{PaloAlto}
+%\usetheme{Goettingen}
+%\usetheme{Marburg}
+%\usetheme{Hannover}
+%\usetheme{Berlin}
+\usetheme{Ilmenau}
+%\usetheme{Dresden}
+%\usetheme{Darmstadt}
+%\usetheme{Frankfurt}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Copenhagen}
+%\usetheme{Malmoe}
+\setbeamercovered{transparent}
+}
+
+% Choose color scheme
+%
+\usecolortheme{default}
+%\usecolortheme{sidebartab}
+%\usecolortheme{albatross}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{seagull}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+
+\beamertemplateballitem
+%\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+
+\defbeamertemplate*{footline}{shadow theme}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=2.\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fil,rightskip=.3cm]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertframenumber\,/\,\inserttotalframenumber\hfill%\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+    \usebeamerfont{title in head/foot}%\insertshorttitle%
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% number sets
+\def\N{\hbox{I \kern-.5em N}}
+\def\R{\hbox{I \kern-.5em R}}
+\def\Q{\hbox{\hspace*{.25em}{\sf I} \kern-.83em Q}}
+\def\T{\rm T}  %%%%  \rm pour roman (ecriture normale)
+\def\Z{\rm Z}
+\def\ZZ{\hbox{\sf  Z \kern-.8em Z}}
+\def \Zplus        {\ZZ^{+}}
+\def \bigm {\textsc{penal}}
+\def \dst {\textsc{dst}}
+\def \src {\textsc{src}}
+\def \zlp {z^{\star}_{\textsc{lp}}}
+\def \zilp {{\tilde z}_{\textsc{ilp}}}
+\def \l    {\textnormal{\textsc{l}}}
+\def \Gp   {G_{\textsc{p}}}
+\def \Gl   {G_{\l}}
+\def \Vp   {V_{\textsc{p}}}
+\def \Vl   {V_{\l}}
+\def \Ep   {E_{\textsc{p}}}
+\def \El   {E_{\l}}
+\def \cost {\textsc{cost}}
+\def \srlg {\textsc{srlg}}
+
+% number sets
+\def \best {\textsc{best}}
+\def  \N            {\hbox{I \kern-.5em N}}
+\def \RR {\mathbb{R}}
+\def \Rplus {\RR^+}
+\def  \Z            {\rm Z}
+\def  \Zplus        {\Z^+}
+\def  \Zplusn       {\Zplus_n}
+\def  \ZZ           {\hbox{\sf  Z \kern-.8em Z}}
+\def \Z {\mathbb{Z}}
+
+\logo{%
+    \includegraphics[width=2.cm,keepaspectratio]{Figures/ConULogo_CMYK.eps}~%
+}
+
+\title[My Title]{High-Resolution Road Vehicle Collision Prediction
+for the City of Montreal}
+\author[My~Name]{\small
+\textbf{Antoine H\'ebert, Timoth\'ee Gu\'edon, Tristan Glatard, Brigitte Jaumard}}
+\institute[My Institute/company]
+{Concordia University \\ Department of Computer Science and Software Engineering}
+\date[]{November 7, 2019}
+
+\begin{document}
+
+\begin{frame} % Cover slide
+\titlepage
+\end{frame}
+
+%-------------------------------------------------
+\section{Introduction}
+%-------------------------------------------------
+
+% -------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Road accident prediction}
+
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+\begin{itemize}
+\item[] \textbf{Context}
+  \begin{itemize}
+    \item Road accidents result in millions of deaths worldwide every year.
+		\item Human and economic impact on society.
+  \end{itemize}
+
+\item[] \textbf{Objectives}
+  \begin{itemize}
+    \item Combine several \underline{open datasets} for accident prediction
+    \item Develop a high-resolution \underline{accident prediction model} for Montreal
+    \item Compare 3 algorithms to deal with \underline{data imbalance}
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+  \begin{itemize}
+\item[] \includegraphics[height=5cm]{Figures/snow.png}
+  \end{itemize} 
+\end{column}
+\end{columns}
+\end{frame}
+
+% -------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Open Datasets}
+
+\begin{footnotesize}
+We used open datasets provided by the Government of Canada and the City of Montreal.
+
+\begin{itemize}
+\item[] \textbf{\href{http://donnees.ville.montreal.qc.ca/dataset/collisions-routieres}{Collisions routières Montréal} (SAAQ)}
+  \begin{itemize}
+  	\item Vehicle collisions reported by the police from 2012 to 2017 in Montreal.
+  	\item Date and time, severity, localization, etc.
+  	\item 134, 489 usable accidents.
+  \end{itemize}
+\item[] \textbf{\href{https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f}{National Road Network}}
+  \begin{itemize}
+    \item High-resolution information about road segments.
+    \item 44, 111 road segments, average length of 124m.
+  \end{itemize}
+\item[] \textbf{\href{https://climate.weather.gc.ca}{Historical Climate Data}}
+  \begin{itemize}
+    \item Temperature, humidity, wind speed and direction, visibility, etc. 
+    \item At different weather stations in Montreal.
+  \end{itemize}
+\end{itemize}
+
+\end{footnotesize}
+
+\end{frame}
+
+% -------------------------------------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Tree-based classification algorithms}
+Tree-based algorithms are commonly used for accident prediction.
+\begin{itemize}
+\item[] \textbf{Related work on accident prediction}
+  \begin{itemize}
+    \item Extensive use of decision trees in several forms: \colorcite{Theofilatos2017}, \colorcite{Abellan2013}, \colorcite{Lin2015}, \colorcite{Chang2005}
+    \item Recently, Deep Learning algorithms (LSTM and CNN): \colorcite{Yuan2018}, \colorcite{Chen2016}
+  \end{itemize}
+\item[] \textbf{Chosen algorithms}
+  \begin{itemize}
+  	\item Random Forest
+    \item Balanced Random Forest
+    \item Gradient Boosted Trees (GBT) - XGBoost implementation
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+  \frametitle{Table of Contents}
+  \tableofcontents
+\end{frame}
+
+%-------------------------------------------------
+\section{Example creation}
+%-------------------------------------------------
+
+\begin{frame}
+	\frametitle{Generating the examples}
+  \begin{itemize}
+  \item[] \textbf{Positive samples}
+    \begin{itemize}
+      \item Identification of road segment for each accident.
+      \item Computation of the distances between road segments and accidents.
+    \end{itemize}
+  \item[] \textbf{Negative samples}
+    \begin{itemize}
+      \item Every time an accident did not happen is considered a negative sample.
+      \item Selection of a subsample (0.1\%) of all possible negative samples.
+      \item $\Rightarrow$ 2 million negative samples for about 135,000 positive samples.
+    \end{itemize}
+    \centering
+    \includegraphics[height=4cm]{Figures/imbalance-monika.png}
+    \begin{tiny}
+    \colorcite{sharma2018data}
+    \end{tiny}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Feature creation}
+	\begin{itemize}
+    \item[] \textbf{Weather}
+    \begin{itemize}
+      \item Interpolation of weather statistics  between several stations
+      \item Used a moving average for atmospheric phenomenons
+    \end{itemize}
+    \item[] \textbf{Road segment}
+    \begin{itemize}
+      \item Length of each road segment
+      \item Type of road (highway, street, boulevard, etc)
+      \item Number of accidents on the road segment during 4 previous years
+    \end{itemize}
+    \item[] \textbf{Date and time} \begin{itemize}
+      \item Cyclic features: hour of the day, day of the month
+      \item Day of week
+      \item Solar elevation
+    \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Infrastructure}
+  \begin{columns}
+  \begin{column}{0.6\textwidth}
+  \begin{itemize}
+    \item \textbf{Apache Spark} \colorcite{zaharia2010spark}       
+    \begin{itemize}
+    \item Parallel computing, in-memory, data locality, lazy evaluation
+    \item APIs in Python, R, Scala
+    \item Used the DataFrame API
+    \end{itemize}
+    \item \textbf{Compute Canada}
+    \begin{itemize}
+      \item Ready-to-use Spark infrastructure
+      \item Improved I/O bottleneck
+      \item Used about 2 CPU years
+      \item Pre-processing reduced to a few hours
+    \end{itemize}
+  \end{itemize}
+  \end{column}
+\begin{column}{0.4\textwidth}
+  \begin{itemize}
+  \item[] \includegraphics[height=3cm, keepaspectratio]{Figures/spark.png}
+  %\vspace{0.5cm}
+  \item[] \includegraphics[height=3cm, keepaspectratio]{Figures/cc-logo.png}
+  \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+%-------------------------------------------------
+\section{Balanced Random Forests}
+%-------------------------------------------------
+
+\begin{frame}
+\frametitle{Random Forests (\cite{Breiman2001})}
+\begin{itemize}
+  \item[] \textbf{Random Forests are an ensemble of decision trees}
+    \begin{itemize}
+      \item Each tree is trained on a random sample of the data
+      \item A random sample of the features is used at each node.
+      \item The final prediction is given by averaging the votes of the trees.
+    \end{itemize}
+    \noindent
+    \begin{figure}
+      \includegraphics[height=3.5cm, keepaspectratio]{Figures/example_decision_tree.png}
+      \includegraphics[height=3.5cm, keepaspectratio]{Figures/example_decision_tree_data.png}
+      \caption{A decision tree}
+      \end{figure}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Dealing with data imbalance (\cite{Chen2004})}
+\begin{itemize}
+  \item[] \textbf{Weighted Random Forests (WRF)}
+    \begin{itemize}
+      \item Add weights to the classes when growing the tree.
+      \item Add weights to the classes at the voting time.
+    \end{itemize}
+
+  \item[] \textbf{Balanced Random Forests (BRF)}
+    \begin{itemize}
+      \item Combine undersampling and ensemble method.
+      \item For each tree: randomly draw a balanced sample.
+      \item The rest of the algorithm is identical to Random Forests.
+    \end{itemize}
+
+  \item[] \textbf{BRF versus WRF}
+    \begin{itemize}
+      \item No clear winner in terms of prediction power! But...
+      \item WRF - More vulnerable to noise on minority class
+      \item BRF - More computationally efficient
+      \item BRF - Easier to implement in Apache Spark
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Implementation of BRF in Apache Spark}
+\begin{itemize}
+  \item[] \textbf{Existing implementation of sampling with replacement}
+    \begin{itemize}
+    	\item Uses the Poisson distribution.
+    	\item The number of times a given sample will be in the subsample of a given tree is given by a random variable following a Poisson distribution.
+      \item The $p$ parameter of the Poisson distribution is the expected value.
+    \end{itemize}
+  \item[] \textbf{Our modifications}:
+    \begin{itemize}
+      \item Instead of creating one Poisson distribution we create two:
+    	\item[]
+      \begin{itemize}
+      	\item One for the distribution of the positive samples.
+        \item Another for the distribution of the negative samples.
+      \end{itemize}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experimentation with our BRF implementation}
+\begin{itemize}
+  \item Dataset from the imbalanced-learn library (\colorcite{Woods1993})
+  \item Same behavior between the two implementations
+  \item BRF does not perform better on this dataset
+\end{itemize}
+
+\centering
+\includegraphics[height=3.0cm, keepaspectratio]{Figures/test_brf_pr.png}\\
+$\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}$
+
+\end{frame}
+
+%-------------------------------------------------
+\section{Results}
+%-------------------------------------------------
+
+% \begin{frame}
+% 	\frametitle{Metric used: Area under the Precision-Recall curve}
+% 	\begin{itemize}
+%     \item ROC Curve : false positive rate VS true positive rate
+%     \begin{equation*}
+% 			FPR = \frac{FP}{FP+TN},  TPR = \frac{TP}{TP+FN}
+% 		\end{equation*}
+% 		\item PR Curve : true positive rate VS precision
+%     \begin{equation*}
+% 			TPR = \frac{TP}{TP+FN},  Precision = \frac{TP}{TP+FP}
+% 		\end{equation*}
+%     \item Data imbalance imply decrease of TP and increase of FN (none of them appears in the FPR)
+%     \item Therefore, area under PR exhibits larger differences than area under ROC (\colorcite{Davis2006})
+% 	\end{itemize}
+% \end{frame}
+
+\begin{frame}
+	\frametitle{Results: PR curves}
+	\begin{itemize}
+		\item Results are much better than the baseline
+		\item No significant difference between the BRF and RF
+	\end{itemize}
+\centering
+\includegraphics[height=4cm, keepaspectratio]{Figures/pr.png}
+\begin{equation*}
+  \mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Results: ROC curves}
+	\begin{itemize}
+     \item We can identify 85\% of the accidents with a false positive rate of 13\%
+	\end{itemize}
+\centering
+\includegraphics[height=4cm, keepaspectratio]{Figures/roc.png}
+\begin{equation*}
+  \mathrm{Recall} = \frac{TP}{TP+FN}
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Results}
+	\begin{itemize}
+		\item Despite similar PR curves, when the same decision threshold is used, BRF and RF obtain very different results 
+	\end{itemize}
+\centering
+\includegraphics[height=4cm, keepaspectratio]{Figures/pr_threshold.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Feature Importance}
+\centering
+\includegraphics[height=6cm, keepaspectratio]{Figures/features.png}
+
+Previous accident count is the most important feature (0.67).
+\end{frame}
+
+%-------------------------------------------------
+\section{Conclusion}
+%-------------------------------------------------
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item[] \textbf{Results}
+    \begin{itemize} 
+    \item We can identify 85\% of the accidents with a false positive rate of 13\%
+    \item Model works at a resolution of 1 hour, between each intersection
+    \item $\Rightarrow$ take security measures at specific road segment and times
+    \end{itemize}
+    \item[] \textbf{Usability}
+    \begin{itemize} 
+    \item Reproducible for other cities: only simple datasets were used
+    \item Code is available at \url{https://github.com/big-data-lab-team/accident-prediction-montreal}
+    \end{itemize}
+  \end{itemize}
+  \centering
+  \includegraphics[height=2cm]{Figures/github.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Future work}
+  \begin{itemize}
+    \item Predict accidents (classification) vs accident risk (regression)
+    \item Impact of data imbalance in constructed sample
+    \item Add more data: traffic, construction, population density, video
+    \item Add industry-specific data
+  \end{itemize}
+  \centering
+  \includegraphics[height=4.5cm]{Figures/fleet.png}
+\end{frame}
+
+% \begin{frame}
+%   \vspace{2cm}
+%   \centering
+%   {\Large \textbf{MERCI !}}
+
+% \end{frame}
+
+% -------------------------------------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------------------------------------------
+%% -------------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+
+{\scriptsize
+
+\bibliographystyle{plainnat}
+\bibliography{Biblio}
+
+}
+
+
+\end{frame}
+
+\end{document}
