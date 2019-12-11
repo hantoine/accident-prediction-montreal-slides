@@ -121,7 +121,7 @@ for the City of Montreal}
 \textbf{Antoine H\'ebert, Timoth\'ee Gu\'edon, Tristan Glatard, Brigitte Jaumard}}
 \institute[My Institute/company]
 {Concordia University \\ Department of Computer Science and Software Engineering}
-\date[]{November 7, 2019}
+\date[]{December 2, 2019}
 
 \begin{document}
 
@@ -138,8 +138,8 @@ for the City of Montreal}
 \begin{frame}
 \frametitle{Road accident prediction}
 
-  \begin{columns}
-    \begin{column}{0.6\textwidth}
+  % \begin{columns}
+  %   \begin{column}{0.6\textwidth}
 \begin{itemize}
 \item[] \textbf{Context}
   \begin{itemize}
@@ -154,13 +154,13 @@ for the City of Montreal}
     \item Compare 3 algorithms to deal with \underline{data imbalance}
   \end{itemize}
 \end{itemize}
-\end{column}
-\begin{column}{0.4\textwidth}
-  \begin{itemize}
-\item[] \includegraphics[height=5cm]{Figures/snow.png}
-  \end{itemize} 
-\end{column}
-\end{columns}
+% \end{column}
+% \begin{column}{0.4\textwidth}
+%   \begin{itemize}
+% \item[] \includegraphics[height=5cm]{Figures/snow.png}
+%   \end{itemize} 
+% \end{column}
+% \end{columns}
 \end{frame}
 
 % -------------------------------------------------------------------------------------------------------------------
@@ -172,16 +172,16 @@ for the City of Montreal}
 We used open datasets provided by the Government of Canada and the City of Montreal.
 
 \begin{itemize}
-\item[] \textbf{\href{http://donnees.ville.montreal.qc.ca/dataset/collisions-routieres}{Collisions routières Montréal} (SAAQ)}
+\item[] \textbf{\href{http://donnees.ville.montreal.qc.ca/dataset/collisions-routieres}{Road collisions Montreal}}
   \begin{itemize}
   	\item Vehicle collisions reported by the police from 2012 to 2017 in Montreal.
   	\item Date and time, severity, localization, etc.
-  	\item 134, 489 usable accidents.
+  	\item 134 thousands usable accidents.
   \end{itemize}
 \item[] \textbf{\href{https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f}{National Road Network}}
   \begin{itemize}
     \item High-resolution information about road segments.
-    \item 44, 111 road segments, average length of 124m.
+    \item 44 thousands road segments, average length of 124m.
   \end{itemize}
 \item[] \textbf{\href{https://climate.weather.gc.ca}{Historical Climate Data}}
   \begin{itemize}
@@ -194,34 +194,6 @@ We used open datasets provided by the Government of Canada and the City of Montr
 
 \end{frame}
 
-% -------------------------------------------------------------------------------------------------------------------
-
-
-\begin{frame}
-\frametitle{Tree-based classification algorithms}
-Tree-based algorithms are commonly used for accident prediction.
-\begin{itemize}
-\item[] \textbf{Related work on accident prediction}
-  \begin{itemize}
-    \item Extensive use of decision trees in several forms: \colorcite{Theofilatos2017}, \colorcite{Abellan2013}, \colorcite{Lin2015}, \colorcite{Chang2005}
-    \item Recently, Deep Learning algorithms (LSTM and CNN): \colorcite{Yuan2018}, \colorcite{Chen2016}
-  \end{itemize}
-\item[] \textbf{Chosen algorithms}
-  \begin{itemize}
-  	\item Random Forest
-    \item Balanced Random Forest
-    \item Gradient Boosted Trees (GBT) - XGBoost implementation
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-
-
-\begin{frame}
-  \frametitle{Table of Contents}
-  \tableofcontents
-\end{frame}
 
 %-------------------------------------------------
 \section{Example creation}
@@ -241,12 +213,12 @@ Tree-based algorithms are commonly used for accident prediction.
       \item Selection of a subsample (0.1\%) of all possible negative samples.
       \item $\Rightarrow$ 2 million negative samples for about 135,000 positive samples.
     \end{itemize}
+    \end{itemize}
     \centering
-    \includegraphics[height=4cm]{Figures/imbalance-monika.png}
+    \includegraphics[height=3cm]{Figures/imbalance-monika.png} \\
     \begin{tiny}
     \colorcite{sharma2018data}
     \end{tiny}
-	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -284,7 +256,7 @@ Tree-based algorithms are commonly used for accident prediction.
     \end{itemize}
     \item \textbf{Compute Canada}
     \begin{itemize}
-      \item Ready-to-use Spark infrastructure
+      % \item Ready-to-use Spark infrastructure
       \item Improved I/O bottleneck
       \item Used about 2 CPU years
       \item Pre-processing reduced to a few hours
@@ -306,27 +278,34 @@ Tree-based algorithms are commonly used for accident prediction.
 \section{Balanced Random Forests}
 %-------------------------------------------------
 
+
 \begin{frame}
-\frametitle{Random Forests (\cite{Breiman2001})}
+\frametitle{Tree-based classification algorithms}
+Tree-based algorithms are commonly used for accident prediction.
 \begin{itemize}
-  \item[] \textbf{Random Forests are an ensemble of decision trees}
-    \begin{itemize}
-      \item Each tree is trained on a random sample of the data
-      \item A random sample of the features is used at each node.
-      \item The final prediction is given by averaging the votes of the trees.
-    \end{itemize}
-    \noindent
-    \begin{figure}
-      \includegraphics[height=3.5cm, keepaspectratio]{Figures/example_decision_tree.png}
-      \includegraphics[height=3.5cm, keepaspectratio]{Figures/example_decision_tree_data.png}
-      \caption{A decision tree}
-      \end{figure}
+\item[] \textbf{Related work on accident prediction}
+  \begin{itemize}
+    \item Extensive use of decision trees in several forms: \colorcite{Theofilatos2017}, \colorcite{Abellan2013}, \colorcite{Lin2015}, \colorcite{Chang2005}
+    \item Recently, Deep Learning algorithms (LSTM and CNN): \colorcite{Yuan2018}, \colorcite{Chen2016}
   \end{itemize}
+\item[] \textbf{Chosen algorithms}
+  \begin{itemize}
+  	\item Random Forest
+    \item Balanced Random Forest (\colorcite{Chen2004})
+    \item Gradient Boosted Trees (GBT) - XGBoost implementation
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Table of Contents}
+  \tableofcontents
+\end{frame}
+
+% -------------------------------------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Dealing with data imbalance (\cite{Chen2004})}
+\frametitle{Dealing with data imbalance (\colorcite{Chen2004})}
 \begin{itemize}
   \item[] \textbf{Weighted Random Forests (WRF)}
     \begin{itemize}
@@ -444,9 +423,9 @@ $\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
 \begin{frame}
 	\frametitle{Feature Importance}
 \centering
+\hspace*{-2cm} Most important feature: previous accident count (67\%)
 \includegraphics[height=6cm, keepaspectratio]{Figures/features.png}
 
-Previous accident count is the most important feature (0.67).
 \end{frame}
 
 %-------------------------------------------------
@@ -475,13 +454,11 @@ Previous accident count is the most important feature (0.67).
 \begin{frame}
   \frametitle{Future work}
   \begin{itemize}
-    \item Predict accidents (classification) vs accident risk (regression)
-    \item Impact of data imbalance in constructed sample
-    \item Add more data: traffic, construction, population density, video
-    \item Add industry-specific data
+    \item Analyse why BRF did not perform better than RF
+    \item Add more datasets: traffic, construction, population density
   \end{itemize}
   \centering
-  \includegraphics[height=4.5cm]{Figures/fleet.png}
+  \includegraphics[height=4.5cm]{Figures/traffic_camera.png}
 \end{frame}
 
 % \begin{frame}
