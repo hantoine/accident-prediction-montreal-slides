@@ -26,41 +26,11 @@
 
 \mode<presentation>
 {
-%\usetheme{Warsaw}
-%\usetheme{Rochester}
-%\usetheme{Madrid}
-%\usetheme{Pittsburgh}
-%\usetheme{Antibes}
-%\usetheme{Montpellier}
-%\usetheme{Berkeley}
-%\usetheme{PaloAlto}
-%\usetheme{Goettingen}
-%\usetheme{Marburg}
-%\usetheme{Hannover}
-%\usetheme{Berlin}
 \usetheme{Ilmenau}
-%\usetheme{Dresden}
-%\usetheme{Darmstadt}
-%\usetheme{Frankfurt}
-%\usetheme{Singapore}
-%\usetheme{Szeged}
-%\usetheme{Copenhagen}
-%\usetheme{Malmoe}
 \setbeamercovered{transparent}
 }
 
-% Choose color scheme
-%
 \usecolortheme{default}
-%\usecolortheme{sidebartab}
-%\usecolortheme{albatross}
-%\usecolortheme{beetle}
-%\usecolortheme{crane}
-%\usecolortheme{dove}
-%\usecolortheme{fly}
-%\usecolortheme{seagull}
-%\usecolortheme{lily}
-%\usecolortheme{orchid}
 
 \beamertemplateballitem
 %\setbeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
@@ -121,7 +91,7 @@ for the City of Montreal}
 \textbf{Antoine H\'ebert, Timoth\'ee Gu\'edon, Tristan Glatard, Brigitte Jaumard}}
 \institute[My Institute/company]
 {Concordia University \\ Department of Computer Science and Software Engineering}
-\date[]{December 2, 2019}
+\date[]{December 12, 2019}
 
 \begin{document}
 
@@ -137,33 +107,42 @@ for the City of Montreal}
 
 \begin{frame}
 \frametitle{Road accident prediction}
-
-  % \begin{columns}
-  %   \begin{column}{0.6\textwidth}
+\vfill
 \begin{itemize}
-\item[] \textbf{Context}
+\item[] \textbf{Motivation}
   \begin{itemize}
     \item Road accidents result in millions of deaths worldwide every year.
 		\item Human and economic impact on society.
   \end{itemize}
 
-\item[] \textbf{Objectives}
+\item[] \textbf{Goal:} Estimate the risk of accident at a high-resolution:
   \begin{itemize}
-    \item Combine several \underline{open datasets} for accident prediction
-    \item Develop a high-resolution \underline{accident prediction model} for Montreal
-    \item Compare 3 algorithms to deal with \underline{data imbalance}
+    \item On any road segment
+    \item Every hour
+  \end{itemize}
+\item[] \textbf{Method:}
+  \begin{itemize}
+    \item Combine several \underline{open datasets} to obtain relevant features
+    \item Develop an \underline{accident prediction model} using tree-based algorithms
   \end{itemize}
 \end{itemize}
-% \end{column}
-% \begin{column}{0.4\textwidth}
-%   \begin{itemize}
-% \item[] \includegraphics[height=5cm]{Figures/snow.png}
-%   \end{itemize} 
-% \end{column}
-% \end{columns}
+\vfill
 \end{frame}
 
 % -------------------------------------------------------------------------------------------------------------------
+\begin{frame}{Related work on accident prediction}
+    \vfill
+  \begin{itemize}
+    \item Extensively studied in the last decade
+    \item Some studies use small datasets and focus on particular roads \\
+        (\colorcite{Chang2005}, \colorcite{Lin2015}, \colorcite{Theofilatos2017})
+    \item More recently, some studies cover larger areas but with a coarse resolution
+        (\colorcite{Chen2016}, \colorcite{Yuan2018})
+    \item Hard to compare performances: only accuracy reported, some study use regression of the risk with various definitions of risk
+  \end{itemize}
+  \vfill
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Open Datasets}
@@ -194,35 +173,42 @@ We used open datasets provided by the Government of Canada and the City of Montr
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Table of Contents}
+  \tableofcontents
+\end{frame}
+
 
 %-------------------------------------------------
-\section{Example creation}
+\section{Data preparation}
 %-------------------------------------------------
 
 \begin{frame}
 	\frametitle{Generating the examples}
+	\vfill
+	\vfill
   \begin{itemize}
   \item[] \textbf{Positive samples}
     \begin{itemize}
-      \item Identification of road segment for each accident.
-      \item Computation of the distances between road segments and accidents.
+      \item For each accident, identification of the road segment
+      \item Using distance between road segments and accidents GPS position.
     \end{itemize}
   \item[] \textbf{Negative samples}
     \begin{itemize}
-      \item Every time an accident did not happen is considered a negative sample.
-      \item Selection of a subsample (0.1\%) of all possible negative samples.
-      \item $\Rightarrow$ 2 million negative samples for about 135,000 positive samples.
+      \item Every road segment and hour without accident
+      \item 2 billion negative examples $\Rightarrow$ too many to work with
+      \item Use a subsample of all possible negative samples (0.1\%).
     \end{itemize}
+  \vfill
+  \item[] $\Rightarrow$ 2 million negative samples for about 135,000 positive samples.
     \end{itemize}
-    \centering
-    \includegraphics[height=3cm]{Figures/imbalance-monika.png} \\
-    \begin{tiny}
-    \colorcite{sharma2018data}
-    \end{tiny}
+  \vfill
+  \vfill
 \end{frame}
 
 \begin{frame}
 	\frametitle{Feature creation}
+	\vfill
 	\begin{itemize}
     \item[] \textbf{Weather}
     \begin{itemize}
@@ -236,11 +222,12 @@ We used open datasets provided by the Government of Canada and the City of Montr
       \item Number of accidents on the road segment during 4 previous years
     \end{itemize}
     \item[] \textbf{Date and time} \begin{itemize}
-      \item Cyclic features: hour of the day, day of the month
+      \item \href{https://miro.medium.com/max/515/1*70cevmU8wNggGJEdLam1lw.png}{Cyclic features}: hour of the day, day of the month
       \item Day of week
       \item Solar elevation
     \end{itemize}
 	\end{itemize}
+	\vfill
 \end{frame}
 
 \begin{frame}
@@ -251,13 +238,10 @@ We used open datasets provided by the Government of Canada and the City of Montr
     \item \textbf{Apache Spark} \colorcite{zaharia2010spark}       
     \begin{itemize}
     \item Parallel computing, in-memory, data locality, lazy evaluation
-    \item APIs in Python, R, Scala
     \item Used the DataFrame API
     \end{itemize}
-    \item \textbf{Compute Canada}
+    \item \textbf{Compute Canada cluster}
     \begin{itemize}
-      % \item Ready-to-use Spark infrastructure
-      \item Improved I/O bottleneck
       \item Used about 2 CPU years
       \item Pre-processing reduced to a few hours
     \end{itemize}
@@ -275,37 +259,28 @@ We used open datasets provided by the Government of Canada and the City of Montr
 
 
 %-------------------------------------------------
-\section{Balanced Random Forests}
+\section{Methods}
 %-------------------------------------------------
 
 
 \begin{frame}
 \frametitle{Tree-based classification algorithms}
-Tree-based algorithms are commonly used for accident prediction.
 \begin{itemize}
-\item[] \textbf{Related work on accident prediction}
-  \begin{itemize}
-    \item Extensive use of decision trees in several forms: \colorcite{Theofilatos2017}, \colorcite{Abellan2013}, \colorcite{Lin2015}, \colorcite{Chang2005}
-    \item Recently, Deep Learning algorithms (LSTM and CNN): \colorcite{Yuan2018}, \colorcite{Chen2016}
-  \end{itemize}
-\item[] \textbf{Chosen algorithms}
+\vfill
+\item[] \textbf{Selected algorithms:} Tree-based algorithms
   \begin{itemize}
   	\item Random Forest
     \item Balanced Random Forest (\colorcite{Chen2004})
     \item Gradient Boosted Trees (GBT) - XGBoost implementation
   \end{itemize}
+\vfill
 \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Table of Contents}
-  \tableofcontents
 \end{frame}
 
 % -------------------------------------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Dealing with data imbalance (\colorcite{Chen2004})}
+\frametitle{Dealing with data imbalance (\cite{Chen2004})}
 \begin{itemize}
   \item[] \textbf{Weighted Random Forests (WRF)}
     \begin{itemize}
@@ -334,21 +309,19 @@ Tree-based algorithms are commonly used for accident prediction.
 \begin{frame}
 \frametitle{Implementation of BRF in Apache Spark}
 \begin{itemize}
-  \item[] \textbf{Existing implementation of sampling with replacement}
-    \begin{itemize}
-    	\item Uses the Poisson distribution.
-    	\item The number of times a given sample will be in the subsample of a given tree is given by a random variable following a Poisson distribution.
-      \item The $p$ parameter of the Poisson distribution is the expected value.
-    \end{itemize}
-  \item[] \textbf{Our modifications}:
-    \begin{itemize}
-      \item Instead of creating one Poisson distribution we create two:
-    	\item[]
-      \begin{itemize}
-      	\item One for the distribution of the positive samples.
-        \item Another for the distribution of the negative samples.
-      \end{itemize}
-    \end{itemize}
+    \vfill
+    \item[] \textbf{In random forest implementation}: 
+        \begin{itemize}
+            \item $m_i$ the number of times an example appears in the sample of a tree
+            \item $m_i \thicksim \textit{Poisson}(\lambda)$
+        \end{itemize}
+    \item[] \textbf{Modification:} two different Poisson distributions:
+        \begin{itemize}
+            \item For positive samples: $m_i \thicksim \textit{Poisson}(\lambda_p)$
+            \item For negative samples: $m_i \thicksim \textit{Poisson}(\lambda_n)$
+            \item $\lambda_p < \lambda_n$
+        \end{itemize}
+    \vfill
 \end{itemize}
 \end{frame}
 
@@ -370,22 +343,6 @@ $\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
 \section{Results}
 %-------------------------------------------------
 
-% \begin{frame}
-% 	\frametitle{Metric used: Area under the Precision-Recall curve}
-% 	\begin{itemize}
-%     \item ROC Curve : false positive rate VS true positive rate
-%     \begin{equation*}
-% 			FPR = \frac{FP}{FP+TN},  TPR = \frac{TP}{TP+FN}
-% 		\end{equation*}
-% 		\item PR Curve : true positive rate VS precision
-%     \begin{equation*}
-% 			TPR = \frac{TP}{TP+FN},  Precision = \frac{TP}{TP+FP}
-% 		\end{equation*}
-%     \item Data imbalance imply decrease of TP and increase of FN (none of them appears in the FPR)
-%     \item Therefore, area under PR exhibits larger differences than area under ROC (\colorcite{Davis2006})
-% 	\end{itemize}
-% \end{frame}
-
 \begin{frame}
 	\frametitle{Results: PR curves}
 	\begin{itemize}
@@ -406,9 +363,7 @@ $\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
 	\end{itemize}
 \centering
 \includegraphics[height=4cm, keepaspectratio]{Figures/roc.png}
-\begin{equation*}
-  \mathrm{Recall} = \frac{TP}{TP+FN}
-\end{equation*}
+\hspace*{-1cm}\includegraphics[height=1.5cm, keepaspectratio]{Figures/results_table.png}
 \end{frame}
 
 \begin{frame}
@@ -423,8 +378,9 @@ $\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
 \begin{frame}
 	\frametitle{Feature Importance}
 \centering
+\hspace*{-2cm} Using mean decrease in entropy (\cite{louppe2013understanding}) \\
+\includegraphics[height=5cm, keepaspectratio]{Figures/features.png} \\
 \hspace*{-2cm} Most important feature: previous accident count (67\%)
-\includegraphics[height=6cm, keepaspectratio]{Figures/features.png}
 
 \end{frame}
 
@@ -456,9 +412,10 @@ $\mathrm{Recall} = \frac{TP}{TP+FN} \quad  \mathrm{Precision} = \frac{TP}{TP+FP}
   \begin{itemize}
     \item Analyse why BRF did not perform better than RF
     \item Add more datasets: traffic, construction, population density
+    \item Experiment with different types of algorithms (DNN) and data imbalance techniques (SMOTE, focal loss, etc)
   \end{itemize}
   \centering
-  \includegraphics[height=4.5cm]{Figures/traffic_camera.png}
+  \includegraphics[height=4cm]{Figures/traffic_camera.png}
 \end{frame}
 
 % \begin{frame}
